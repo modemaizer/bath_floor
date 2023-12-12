@@ -11,7 +11,7 @@
             }
             
             .fa-circle {
-                color: {{HEATER_COLOR}};
+                color: blue;
             }
             button {
                 font-size: 2em;
@@ -77,17 +77,6 @@
                 border-radius: 50%;
             }
         </style>
-        <title>Ванная</title>
-    </head>
-    <body>
-        <br>
-        <div style="text-align: right;"><a href="/settings"><i class="fa fa-cog fa-3x" aria-hidden="true"></i></a></div>
-        <div style="text-align: center;">
-            <label class="switch">
-                <input type="checkbox" id="switch_chk" onclick="toggleState();" {{SWITCH_CHECKED}}>
-                <span class="slider round"></span>
-            </label>
-        </div>
         <script>
             function toggleState() {
                 var xhr = new XMLHttpRequest();
@@ -99,14 +88,54 @@
                 xhr.open("GET", "/switch", true);
                 xhr.send();
             }
+            function getData() {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == XMLHttpRequest.DONE) {
+                        var response = JSON.parse(xhr.responseText);
+                        var triacTempField = document.getElementById("triac_temp").firstChild;
+                        if (response.triacSensorOk) {
+                            triacTempField.data = ` ${response.triacTemperature.toFixed(2)} °C`;
+                        }
+                        else {
+                            triacTempField.data = " SENSOR ERROR";
+                        }
+                        var floorTempField = document.getElementById("floor_temp").firstChild;
+                        if (response.floorSensorOk) {
+                            floorTempField.data = ` ${response.floorTemperature.toFixed(2)} °C`;
+                        }
+                        else {
+                            floorTempField.data = " SENSOR ERROR";
+                        }
+                        document.querySelector('.fa-circle').style.color = response.heaterEnabled ? 'red' : 'blue';
+                        document.getElementById("switch_chk").checked = response.enabled;
+                    }
+                }
+                xhr.open("GET", "/data", true);
+                xhr.send();
+            }
+            getData();
+            setInterval(getData, 2000);
         </script>
-        <div style="text-align: center;"><i class="fas fa-microchip fa-2xl" aria-hidden="true"> {{TRIAC_TEMPERATURE}} &deg;C</i></div>
+        <title>Ванная</title>
+    </head>
+    <body>
+        <br>
+        <div style="text-align: right;"><a href="/settings"><i class="fa fa-cog fa-3x" aria-hidden="true"></i></a></div>
+        <div style="text-align: center;">
+            <label class="switch">
+                <input type="checkbox" id="switch_chk" onclick="toggleState();" {{SWITCH_CHECKED}}>
+                <span class="slider round"></span>
+            </label>
+        </div>
+        
+        <div style="text-align: center;"><i id="triac_temp" class="fas fa-microchip fa-2xl" aria-hidden="true"> {{TRIAC_TEMPERATURE}} &deg;C</i></div>
         <div style="text-align: center;" >
             <span class="fa-stack" >
                 <i class="fas fa-circle fa-stack-2x"></i>
                 <i class="fas fa-thermometer-quarter fa-2xl fa-stack-1x fa-inverse"></i>
             </span>
-            <i class="fas fa-2xl">{{FLOOR_TEMPERATURE}} &deg;C</i>
+            <i id="floor_temp" class="fas fa-2xl">{{FLOOR_TEMPERATURE}} &deg;C</i>
         </div>
         
     </body>

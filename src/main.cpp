@@ -104,6 +104,7 @@ void getData() {
   doc["triacTemperature"] = triacTemp;
   doc["triacSensorOk"] = !triacSensorError;
   doc["heaterEnabled"] = heater;
+  doc["enabled"] = settings.on;
   String buf;
   serializeJson(doc, buf);
   httpServer.send(200, "application/json", buf);
@@ -112,20 +113,15 @@ void getData() {
 void updateSettings() {
   if (httpServer.method() != HTTP_POST) {
     httpServer.send(405, "text/plain", "Method Not Allowed");
-  } else {
-    Serial.println(httpServer.args());
-    String message = "POST form was:\n";
-    for (uint8_t i = 0; i < httpServer.args(); i++) { message += " " + httpServer.argName(i) + ": " + httpServer.arg(i) + "\n"; }
-    Serial.println(message);
+  } 
+  else {
     bool changed = false;
     if(httpServer.hasArg("t")) {
       settings.temperature = httpServer.arg("t").toFloat();
-      Serial.print("temperature: "); Serial.println(settings.temperature);
       changed = true;
     }
     if(httpServer.hasArg("d")) {
       settings.delta = httpServer.arg("d").toFloat();
-      Serial.print("delta: "); Serial.println(settings.delta);
       changed = true;
     }
     if(changed) {
