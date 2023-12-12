@@ -63,6 +63,7 @@ String indexKeyProcessor(const String& key)
   if (key == "FLOOR_TEMPERATURE") return floorSensorError ? "Sensor error" : String(floorTemp);
   else if (key == "HEATER_COLOR") return heater ? "red" : "blue";
   else if (key == "TRIAC_TEMPERATURE") return triacSensorError ? "Sensor error" : String(triacTemp);
+  else if (key == "SWITCH_CHECKED") return settings.on ? "checked" : "";
 
   return "Key not found";
 }
@@ -155,6 +156,12 @@ void updateSettings_old() {
   httpServer.send(200, "text/html", "Settings updated");
 }
 
+void switchState() {
+  settings.on = !settings.on;
+  data.update();
+  httpServer.send(200, "text/plain", String(settings.on));
+}
+
 File f;
 String uploadError = "Upload success";
 
@@ -163,6 +170,7 @@ void restServerRouting() {
   httpServer.on(F("/data"), HTTP_GET, getData);
   httpServer.on(F("/settings"), HTTP_GET, getSettingsForm);
   httpServer.on(F("/settings"), HTTP_POST, updateSettings);
+  httpServer.on(F("/switch"), HTTP_GET, switchState);
   
 
   // Upload new HTML files

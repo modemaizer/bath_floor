@@ -13,12 +13,93 @@
             .fa-circle {
                 color: {{HEATER_COLOR}};
             }
+            button {
+                font-size: 2em;
+                text-align: center;
+            }
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 100px;
+                height: 50px;
+            }
+
+            .switch input { 
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ccc;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 40px;
+                width: 40px;
+                left: 5px;
+                bottom: 5px;
+                background-color: white;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+            input:checked + .slider {
+                background-color: #1dc317;
+            }
+
+            input:focus + .slider {
+                box-shadow: 0 0 1px #1dc317;
+            }
+
+            input:checked + .slider:before {
+                -webkit-transform: translateX(50px);
+                -ms-transform: translateX(50px);
+                transform: translateX(50px);
+            }
+
+            /* Rounded sliders */
+            .slider.round {
+                border-radius: 34px;
+            }
+
+            .slider.round:before {
+                border-radius: 50%;
+            }
         </style>
         <title>Ванная</title>
     </head>
     <body>
         <br>
-        <div style="text-align: right;"><a href="/settings"><i class="fa fa-cog fa-2xl" aria-hidden="true"></i></a></div>
+        <div style="text-align: right;"><a href="/settings"><i class="fa fa-cog fa-3x" aria-hidden="true"></i></a></div>
+        <div style="text-align: center;">
+            <label class="switch">
+                <input type="checkbox" id="switch_chk" onclick="toggleState();" {{SWITCH_CHECKED}}>
+                <span class="slider round"></span>
+            </label>
+        </div>
+        <script>
+            function toggleState() {
+                var xhr = new XMLHttpRequest();
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == XMLHttpRequest.DONE) {
+                        document.getElementById("switch_chk").checked = xhr.response == 1;
+                    }
+                }
+                xhr.open("GET", "/switch", true);
+                xhr.send();
+            }
+        </script>
         <div style="text-align: center;"><i class="fas fa-microchip fa-2xl" aria-hidden="true"> {{TRIAC_TEMPERATURE}} &deg;C</i></div>
         <div style="text-align: center;" >
             <span class="fa-stack" >
