@@ -1,0 +1,32 @@
+<head>
+    <title>Settings</title>
+    <style>
+      input {
+        font-size: 2em;
+      }
+      label {
+        font-size: 2em;
+      }
+      #number {
+        width: 5em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Settings</h1><br>
+    <h3>{{MESSAGE}}</h3>
+    <form method="post" enctype="application/x-www-form-urlencoded">
+      <table>
+        <tr>
+          <td><label for="t" id="label">Temperature: </label></td>
+          <td><input type="number" name="t" value="{{TEMPERATURE}}" max="30" id="number" pattern="\d"></td>
+        </tr>
+        <tr>
+          <td><label for="d" id="label">Delta: </label></td>
+          <td><input type="number" name="d" value="{{DELTA}}" step="0.1" min="0.1" max="5.0" id="number" pattern="\d"></td>
+        </tr>
+      </table>
+      <input type="submit" value="Save">
+    </form>
+  </body>
+</html>

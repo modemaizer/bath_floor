@@ -66,9 +66,24 @@ String indexKeyProcessor(const String& key)
 
   return "Key not found";
 }
+String settingsMessage = "";
+String settingsKeyProcessor(const String& key)
+{
+  if (key == "TEMPERATURE") return String(settings.temperature);
+  else if (key == "DELTA") return String(settings.delta);
+  else if (key == "MESSAGE") return settingsMessage;
+
+  return "Key not found";
+}
 
 void getMainPage() {
   templateProcessor.processAndSend("/index.html", indexKeyProcessor);
+}
+
+void getSettingsForm() {
+  if(templateProcessor.processAndSend("/settings.html", settingsKeyProcessor)) {
+    settingsMessage = "";
+  }
 }
 
 void getSettings() {
@@ -94,6 +109,33 @@ void getData() {
 }
 
 void updateSettings() {
+  if (httpServer.method() != HTTP_POST) {
+    httpServer.send(405, "text/plain", "Method Not Allowed");
+  } else {
+    Serial.println(httpServer.args());
+    String message = "POST form was:\n";
+    for (uint8_t i = 0; i < httpServer.args(); i++) { message += " " + httpServer.argName(i) + ": " + httpServer.arg(i) + "\n"; }
+    Serial.println(message);
+    bool changed = false;
+    if(httpServer.hasArg("t")) {
+      settings.temperature = httpServer.arg("t").toFloat();
+      Serial.print("temperature: "); Serial.println(settings.temperature);
+      changed = true;
+    }
+    if(httpServer.hasArg("d")) {
+      settings.delta = httpServer.arg("d").toFloat();
+      Serial.print("delta: "); Serial.println(settings.delta);
+      changed = true;
+    }
+    if(changed) {
+      data.update();
+      settingsMessage = "Settings updated";
+    }
+    getSettingsForm();
+  }
+}
+
+void updateSettings_old() {
   bool changed = false;
   if (httpServer.hasArg("t")){
     settings.temperature = httpServer.arg("t").toFloat();
@@ -113,11 +155,84 @@ void updateSettings() {
   httpServer.send(200, "text/html", "Settings updated");
 }
 
+File f;
+String uploadError = "Upload success";
+
 void restServerRouting() {
   httpServer.on(F("/"), HTTP_GET, getMainPage);
   httpServer.on(F("/data"), HTTP_GET, getData);
-  httpServer.on(F("/settings"), HTTP_GET, getSettings);
-  httpServer.on(F("/settings/update"), HTTP_GET, updateSettings);
+  httpServer.on(F("/settings"), HTTP_GET, getSettingsForm);
+  httpServer.on(F("/settings"), HTTP_POST, updateSettings);
+  
+
+  // Upload new HTML files
+  // This responds to commands like:
+  //    curl -F "file=@css/dropdown.css;filename=/css/dropdown.css" 192.168.4.1/update
+  //    curl -F "file=@index.html;filename=/index.html" 192.168.4.1/update
+  // To upload web pages. This is using the underlying SPIFF filesystem, but doesn't require
+  // a completely new upload
+  // httpServer.onFileUpload([](){
+     
+  //     if(httpServer.uri() != "/update") return;
+  //     HTTPUpload& upload = httpServer.upload();
+  //     if(upload.status == UPLOAD_FILE_START){
+  //       Serial.setDebugOutput(true);
+  //       WiFiUDP::stopAll();
+  //       Serial.printf("Update: %s\n", upload.filename.c_str());
+
+  //       //  (1) Rename the old file
+  //       if (LittleFS.exists(upload.filename.c_str()))
+  //       {
+  //         LittleFS.rename(upload.filename.c_str(),(upload.filename+".BAK").c_str());
+  //       }
+  //       //  (2) Create the new file
+  //       f = LittleFS.open(upload.filename.c_str(), "w+");
+  //       uploadError = "";
+       
+  //     } else if(upload.status == UPLOAD_FILE_WRITE){
+  //       // (1) Append this buffer to the end of the open file
+  //       if (f.write(upload.buf, upload.currentSize) != upload.currentSize){
+  //         uploadError = "Error writing file chunk";
+  //       }
+  //       else
+  //       {
+  //         Serial.printf("Wrote bytes: %d\n", upload.currentSize);
+  //       }
+       
+  //     } else if(upload.status == UPLOAD_FILE_END){
+
+  //     // Close the file
+  //       f.close();
+  //       // (1) Check if the update was successful
+  //       // (2) If Successful, close the file and delete the renamed one
+  //       // (3) If failed, close and delete the new file and move the renamed one back in place
+  //       if (uploadError == "")
+  //       {
+  //         Serial.println("Upload succesful");
+  //         LittleFS.remove((upload.filename+".BAK").c_str());
+  //       }
+  //       else
+  //       {
+  //         Serial.printf("Error uploading new file putting old file back in place: %s\n", upload.filename.c_str());
+  //         LittleFS.remove((upload.filename).c_str());
+  //         LittleFS.rename((upload.filename+".BAK").c_str(), upload.filename.c_str());
+  //       }
+       
+  //       Serial.setDebugOutput(false);
+  //     }
+  //     yield();
+  //   });
+
+  //   httpServer.on("/update", HTTP_POST, [](){
+  //     httpServer.sendHeader("Connection", "close");
+  //     httpServer.sendHeader("Access-Control-Allow-Origin", "*");
+
+  //     // TODO: Send back better information based on whether the upload was successful.
+  //     httpServer.send(200, "text/plain", uploadError);
+     
+  //     //ESP.restart(); // I don't think we need to restart after every file upload
+     
+  //   });
 }
 
 void handleNotFound() {
