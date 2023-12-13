@@ -9,12 +9,10 @@
       }
       input {
         font-size: 2em;
+        width: 5em;
       }
       label {
         font-size: 2em;
-      }
-      #number {
-        width: 5em;
       }
       th, td {
         padding: 15px;
@@ -23,26 +21,99 @@
         margin-left: auto;
         margin-right: auto;
       }
+      #message {
+        color: #1dc317;
+        opacity: 0;
+      }
     </style>
+    <script>
+      function getData() {
+          var xhr = new XMLHttpRequest();
+          xhr.onreadystatechange = function() {
+              if (xhr.readyState == XMLHttpRequest.DONE) {
+                  var response = JSON.parse(xhr.responseText);
+                  document.getElementById("temperature").value = response.t;
+                  document.getElementById("delta").value = response.d;
+              }
+          }
+          xhr.open("GET", "/settings/data", true);
+          xhr.send();
+      }
+      
+      function handleSubmit(event) {
+        event.preventDefault();
+        var myform = document.getElementById("myform");
+        
+        var formData = new FormData(myform);
+
+        fetch("/settings/update", {
+          method: "POST",
+          body: formData,
+        })
+          .then(response => {
+          if (!response.ok) {
+            throw new Error('network returns error');
+          }
+          return response.json();
+        })
+          .then((resp) => {
+            document.getElementById("temperature").value = resp.t;
+            document.getElementById("delta").value = resp.d;
+            showMessage();
+          })
+          .catch((error) => {
+            // Handle error
+            console.log("error ", error);
+          });
+      }
+
+      const fadeIn = (el, timeout, display) => {
+        el.style.opacity = 0;
+        el.style.transition = `opacity ${timeout}ms`;
+        setTimeout(() => {
+          el.style.opacity = 1;
+        }, 10);
+      };
+
+      const fadeOut = (el, timeout) => {
+        el.style.opacity = 1;
+        el.style.transition = `opacity ${timeout}ms`;
+        
+        setTimeout(() => {
+          el.style.opacity = 0;
+        }, timeout);
+      };
+      function showMessage() {
+        var msg = document.getElementById("message");
+        fadeIn(msg, 1000, 'flex');
+        fadeOut(msg, 1000);
+      }
+  </script>
   </head>
   <body>
     <br>
-    <div style="text-align: left;"><a href="/"><i class="fa fa-thermometer-quarter fa-3x" aria-hidden="true"></i></a></div>
-    <h3 style="text-align: center;">{{MESSAGE}}</h3>
-    <form method="post" enctype="application/x-www-form-urlencoded">
+    <div style="text-align: left;"><a href="/"><i class="fas fa-thermometer-quarter fa-3x" aria-hidden="true"></i></a></div>
+    <div style="text-align: center;" class="fa-3x"><label id="message">Settings updated</label></div>
+    <form method="post" id="myform" enctype="application/x-www-form-urlencoded" onsubmit="return handleSubmit">
+      
+      <script>
+        getData();
+        var myform = document.getElementById("myform");
+        myform.addEventListener("submit", handleSubmit);
+      </script>
       <div  style="text-align: center;">
         <table class="center">
           <tr>
-            <td><label for="t" id="label">Temperature: </label></td>
-            <td><input type="number" name="t" value="{{TEMPERATURE}}" max="30" id="number" pattern="\d"></td>
+            <td><label for="t" id="label" class="fa-3x">Temperature: </label></td>
+            <td><input type="number" name="t" max="30" id="temperature" pattern="\d" class="fa-3x"></td>
           </tr>
           <tr>
-            <td><label for="d" id="label">Delta: </label></td>
-            <td><input type="number" name="d" value="{{DELTA}}" step="0.1" min="0.1" max="5.0" id="number" pattern="\d"></td>
+            <td><label for="d" id="label" class="fa-3x">Delta: </label></td>
+            <td><input type="number" name="d" step="0.1" min="0.1" max="5.0" id="delta" pattern="\d" class="fa-3x"></td>
           </tr>
         </table>
       </div>
-      <div style="text-align: center;" >
+      <div style="text-align: center;" class="fa-3x">
         <input type="submit" value="Save">
       </div>
     </form>

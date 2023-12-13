@@ -18,7 +18,6 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPUpdateServer.h>
 #include <ESP8266mDNS.h>
-#include <EspHtmlTemplateProcessor.h>
 #include <microDS18B20.h>
 #include <FileData.h>
 #include <ArduinoJson.h>
@@ -53,39 +52,9 @@ uint8_t triacSensorAddress[8] = { 0x28, 0x2D, 0x8F, 0x75, 0xD0, 0x01, 0x3C, 0xAF
 WiFiClient client;
 ESP8266WebServer httpServer(80);
 ESP8266HTTPUpdateServer httpUpdateServer;
-EspHtmlTemplateProcessor templateProcessor(&httpServer);
 
 MicroDS18B20<SENSORS_PIN, floorSensorAddress> floorSensor;
 MicroDS18B20<SENSORS_PIN, triacSensorAddress> triacSensor;
-
-String indexKeyProcessor(const String& key)
-{
-  if (key == "FLOOR_TEMPERATURE") return floorSensorError ? "Sensor error" : String(floorTemp);
-  else if (key == "HEATER_COLOR") return heater ? "red" : "blue";
-  else if (key == "TRIAC_TEMPERATURE") return triacSensorError ? "Sensor error" : String(triacTemp);
-  else if (key == "SWITCH_CHECKED") return settings.on ? "checked" : "";
-
-  return "Key not found";
-}
-String settingsMessage = "";
-String settingsKeyProcessor(const String& key)
-{
-  if (key == "TEMPERATURE") return String(settings.temperature);
-  else if (key == "DELTA") return String(settings.delta);
-  else if (key == "MESSAGE") return settingsMessage;
-
-  return "Key not found";
-}
-
-void getMainPage() {
-  templateProcessor.processAndSend("/index.html", indexKeyProcessor);
-}
-
-void getSettingsForm() {
-  if(templateProcessor.processAndSend("/settings.html", settingsKeyProcessor)) {
-    settingsMessage = "";
-  }
-}
 
 void getSettings() {
   DynamicJsonDocument doc(512);
@@ -126,30 +95,9 @@ void updateSettings() {
     }
     if(changed) {
       data.update();
-      settingsMessage = "Settings updated";
     }
-    getSettingsForm();
+    getSettings();
   }
-}
-
-void updateSettings_old() {
-  bool changed = false;
-  if (httpServer.hasArg("t")){
-    settings.temperature = httpServer.arg("t").toFloat();
-    changed = true;
-  }
-  if (httpServer.hasArg("d")){
-    settings.delta = httpServer.arg("d").toFloat();
-    changed = true;
-  }
-  if (httpServer.hasArg("on")){
-    settings.on = httpServer.arg("on").toInt() == 1;
-    changed = true;
-  }  
-  if(changed) {
-    data.updateNow();
-  }
-  httpServer.send(200, "text/html", "Settings updated");
 }
 
 void switchState() {
@@ -158,14 +106,15 @@ void switchState() {
   httpServer.send(200, "text/plain", String(settings.on));
 }
 
-File f;
-String uploadError = "Upload success";
+// File f;
+// String uploadError = "Upload success";
 
 void restServerRouting() {
-  httpServer.on(F("/"), HTTP_GET, getMainPage);
+  httpServer.serveStatic("/", LittleFS, "/index.html");
+  httpServer.serveStatic("/settings", LittleFS, "/settings.html");
   httpServer.on(F("/data"), HTTP_GET, getData);
-  httpServer.on(F("/settings"), HTTP_GET, getSettingsForm);
-  httpServer.on(F("/settings"), HTTP_POST, updateSettings);
+  httpServer.on(F("/settings/data"), HTTP_GET, getSettings);
+  httpServer.on(F("/settings/update"), HTTP_POST, updateSettings);
   httpServer.on(F("/switch"), HTTP_GET, switchState);
   
 
