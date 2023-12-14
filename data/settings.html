@@ -8,11 +8,11 @@
           margin-top: 3em;
       }
       input {
-        font-size: 2em;
+        /* font-size: 2em; */
         width: 5em;
       }
       label {
-        font-size: 2em;
+        /* font-size: 2em; */
       }
       th, td {
         padding: 15px;
@@ -93,7 +93,7 @@
   <body>
     <br>
     <div style="text-align: left;"><a href="/"><i class="fas fa-thermometer-quarter fa-3x" aria-hidden="true"></i></a></div>
-    <div style="text-align: center;" class="fa-3x"><label id="message">Settings updated</label></div>
+    <div style="text-align: center;"><label id="message" class="fas fa-2xl">Settings updated</label></div>
     <form method="post" id="myform" enctype="application/x-www-form-urlencoded" onsubmit="return handleSubmit">
       
       <script>
@@ -104,17 +104,17 @@
       <div  style="text-align: center;">
         <table class="center">
           <tr>
-            <td><label for="t" id="label" class="fa-3x">Temperature: </label></td>
-            <td><input type="number" name="t" max="30" id="temperature" pattern="\d" class="fa-3x"></td>
+            <td><label for="t" id="label" class="fas fa-2xl">Temperature: </label></td>
+            <td><input type="number" name="t" max="30" id="temperature" pattern="\d" class="fas fa-2xl"></td>
           </tr>
           <tr>
-            <td><label for="d" id="label" class="fa-3x">Delta: </label></td>
-            <td><input type="number" name="d" step="0.1" min="0.1" max="5.0" id="delta" pattern="\d" class="fa-3x"></td>
+            <td><label for="d" id="label" class="fas fa-2xl">Delta: </label></td>
+            <td><input type="number" name="d" step="0.1" min="0.1" max="5.0" id="delta" pattern="\d" class="fas fa-2xl"></td>
           </tr>
         </table>
       </div>
-      <div style="text-align: center;" class="fa-3x">
-        <input type="submit" value="Save">
+      <div style="text-align: center;" >
+        <input type="submit" value="Save" class="fas fa-2xl">
       </div>
     </form>
   </body>
