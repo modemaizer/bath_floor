@@ -100,16 +100,11 @@ void parseIncomingCommand(char *topic, byte *payload, unsigned int length)
 
     command[length] = '\0';
 
-    if (strcmp(command, "on") == 0) {
-        mqttPrintf(LOG_TOPIC, "%s", "ON");
+    if (strcmp(command, "on") == 0)
         toggleDeviceState(true);
-    }
     else if (strcmp(command, "off") == 0)
         toggleDeviceState(false);
     else if (strcmp(command, "temp ") == 0) {
-        mqttPrintf(LOG_TOPIC, "%s", &command[4]);
-        mqttPrintf(LOG_TOPIC, "%s", &command[5]);
-        mqttPrintf(LOG_TOPIC, "%d", atof(&command[4]));
         setSettingsTemperature(atof(&command[5]));
     }
     else if (strcmp(command, "delta") == 0) {
