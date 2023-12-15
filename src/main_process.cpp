@@ -104,10 +104,10 @@ void parseIncomingCommand(char *topic, byte *payload, unsigned int length)
         toggleDeviceState(true);
     else if (strcmp(command, "off") == 0)
         toggleDeviceState(false);
-    else if (strcmp(command, "temp ") == 0) {
+    else if (strstr(command, "temp ") != NULL) {
         setSettingsTemperature(atof(&command[5]));
     }
-    else if (strcmp(command, "delta") == 0) {
+    else if (strstr(command, "delta ") != NULL) {
         setSettingsDelta(atof(&command[6]));
     }
     
