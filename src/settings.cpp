@@ -7,7 +7,7 @@ struct BathSettings {
   float temperature = 20;
   float delta = 0.5;
   bool on = false;
-  long unsigned int interval = 500;
+  uint32_t interval = 500;
 };
 static BathSettings settings;
 
@@ -35,7 +35,7 @@ float getSettingsDelta() {
 bool getDeviceState() {
     return settings.on;
 }
-long unsigned int getSensorsCheckInterval() {
+uint32_t getSensorsCheckInterval() {
     return settings.interval;
 }
 float getTemperatureLowBound() {
@@ -54,7 +54,7 @@ void setSettingsDelta(float value) {
     settings.delta = value;
     data.update();
 }
-void setSensorsCheckInterval(int value) {
+void setSensorsCheckInterval(uint32_t value) {
     settings.interval = value;
     data.update();
 }

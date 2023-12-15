@@ -7,9 +7,9 @@
 #include "settings.h"
 #include "wifi.h"
 
-unsigned long sensorPreviousMillis = 0;
-unsigned long wifiErrorPreviousMillis = 0;
-unsigned long sensorErrorPreviousMillis = 0;
+uint32_t sensorPreviousMillis = 0;
+uint32_t wifiErrorPreviousMillis = 0;
+uint32_t sensorErrorPreviousMillis = 0;
 
 bool getHeaterState() {
   return digitalRead(HEATER_PIN);
@@ -44,8 +44,8 @@ static void invertPin(uint8_t pin){
   digitalWrite(pin, !digitalRead(pin));
 }
 
-static void blink(uint8_t pin, unsigned long &counter, unsigned long interval) {
-  unsigned long current = millis();
+static void blink(uint8_t pin, uint32_t &counter, uint32_t interval) {
+  uint32_t current = millis();
   if(current - counter >= interval) {
     invertPin(pin);
     counter = current;
@@ -89,7 +89,7 @@ void mainInit() {
 void mainProcess() {
     settingsProcess();
     processLeds();
-    unsigned long currentMillis = millis();
+    uint32_t currentMillis = millis();
     if (currentMillis - sensorPreviousMillis >= getSensorsCheckInterval()) {
         sensorPreviousMillis = currentMillis;
         sensorsProcess();
