@@ -23,10 +23,10 @@
 #define LOG_TOPIC                       "bath/log"
 
 //pins
-#define SENSORS_PIN             D4
-#define RED_LED_PIN             D6
-#define GREEN_LED_PIN           D7
-#define HEATER_PIN              D8
+#define SENSORS_PIN     D4
+#define RED_LED_PIN     D6
+#define GREEN_LED_PIN   D7
+#define HEATER_PIN      D8
 
 //parameters
 #define SERIAL_BAUDRATE                     115200
@@ -34,3 +34,6 @@
 #define WIFI_ERROR_BLINK_INTERVAL           500
 #define FLOOR_SENSOR_ERROR_BLINK_INTERVAL   100
 #define TRIAC_SENSOR_ERROR_BLINK_INTERVAL   500
+#define SETTINGS_TEMPERATURE_DEFAULT        25
+#define SETTINGS_DELTA_DEFAULT              0.5
+#define SETTINGS_INTERVAL_DEFAULT           1000

@@ -4,10 +4,10 @@
 #include "defines.h"
 
 struct BathSettings {
-  float temperature = 20;
-  float delta = 0.5;
+  float temperature = SETTINGS_TEMPERATURE_DEFAULT;
+  float delta = SETTINGS_DELTA_DEFAULT;
   bool on = false;
-  uint32_t interval = 500;
+  uint32_t interval = SETTINGS_INTERVAL_DEFAULT;
 };
 static BathSettings settings;
 
@@ -20,6 +20,8 @@ void settingsInit() {
     else {
         Serial.println("LittleFS ERR");
     }
+    data.setTimeout(1000);
+    data.read();
 }
 
 void settingsProcess() {

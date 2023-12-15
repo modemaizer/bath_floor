@@ -14,17 +14,18 @@ static WiFiClient wifiClient;
 ESP8266WebServer httpServer(80);
 ESP8266HTTPUpdateServer httpUpdateServer;
 
-void getSettingsEndpoint() {
+static void getSettingsEndpoint() {
   DynamicJsonDocument doc(512);
-  doc["t"] = getSettingsTemperature();
-  doc["d"] = getSettingsDelta();
-  doc["on"] = getDeviceState();
+  doc["temperature"] = getSettingsTemperature();
+  doc["delta"] = getSettingsDelta();
+  doc["state"] = getDeviceState();
+  doc["interval"] = getSensorsCheckInterval();
   String buf;
   serializeJson(doc, buf);
   httpServer.send(200, "application/json", buf);
 }
 
-void getDataEndpoint() {
+static void getDataEndpoint() {
   DynamicJsonDocument doc(512);
   doc["floorTemperature"] = getFloorTemperature();
   doc["floorSensorOk"] = getFloorSensorOk();
@@ -37,7 +38,7 @@ void getDataEndpoint() {
   httpServer.send(200, "application/json", buf);
 }
 
-void updateSettingsEndpoint() {
+static void updateSettingsEndpoint() {
   if (httpServer.method() != HTTP_POST) {
     httpServer.send(405, "text/plain", "Method Not Allowed");
   } 
@@ -48,12 +49,15 @@ void updateSettingsEndpoint() {
     if(httpServer.hasArg("d")) {
       setSettingsDelta(httpServer.arg("d").toFloat());
     }
+    if(httpServer.hasArg("i")) {
+      setSensorsCheckInterval(httpServer.arg("i").toInt());
+    }
 
     getSettingsEndpoint();
   }
 }
 
-void switchDeviceStateEndpoint() {
+static void switchDeviceStateEndpoint() {
   toggleDeviceState();
   httpServer.send(200, "text/plain", String(getDeviceState()));
 }
@@ -61,9 +65,11 @@ void switchDeviceStateEndpoint() {
 // File f;
 // String uploadError = "Upload success";
 
-void restServerRouting() {
+static void restServerRouting() {
   httpServer.serveStatic("/", LittleFS, "/index.html");
   httpServer.serveStatic("/settings", LittleFS, "/settings.html");
+  httpServer.serveStatic("/settings.css", LittleFS, "/settings.css");
+  httpServer.serveStatic("/settings.js", LittleFS, "/settings.js");
   httpServer.on(F("/data"), HTTP_GET, getDataEndpoint);
   httpServer.on(F("/settings/data"), HTTP_GET, getSettingsEndpoint);
   httpServer.on(F("/settings/update"), HTTP_POST, updateSettingsEndpoint);
@@ -140,7 +146,7 @@ void restServerRouting() {
   //   });
 }
 
-void handleNotFound() {
+static void handleNotFound() {
   String message = "File Not Found\n\n";
   message += "URI: ";
   message += httpServer.uri();

@@ -75,46 +75,46 @@ static void processLeds() {
 }
 
 void mainInit() {
-    Serial.begin(SERIAL_BAUDRATE);
-    Serial.println("Start");
-    settingsInit();
-    pinMode(HEATER_PIN, OUTPUT);
-    digitalWrite(HEATER_PIN, LOW);
-    pinMode(RED_LED_PIN, OUTPUT);
-    digitalWrite(RED_LED_PIN, LOW);
-    pinMode(GREEN_LED_PIN, OUTPUT);
-    digitalWrite(GREEN_LED_PIN, LOW);
+  Serial.begin(SERIAL_BAUDRATE);
+  Serial.println("Start");
+  settingsInit();
+  pinMode(HEATER_PIN, OUTPUT);
+  digitalWrite(HEATER_PIN, LOW);
+  pinMode(RED_LED_PIN, OUTPUT);
+  digitalWrite(RED_LED_PIN, LOW);
+  pinMode(GREEN_LED_PIN, OUTPUT);
+  digitalWrite(GREEN_LED_PIN, LOW);
 }
 
 void mainProcess() {
-    settingsProcess();
-    processLeds();
-    uint32_t currentMillis = millis();
-    if (currentMillis - sensorPreviousMillis >= getSensorsCheckInterval()) {
-        sensorPreviousMillis = currentMillis;
-        sensorsProcess();
-        heaterProcess();
-    }
+  settingsProcess();
+  processLeds();
+  uint32_t currentMillis = millis();
+  if (currentMillis - sensorPreviousMillis >= getSensorsCheckInterval()) {
+    sensorPreviousMillis = currentMillis;
+    sensorsProcess();
+    heaterProcess();
+  }
 }
 
 void parseIncomingCommand(char *topic, byte *payload, unsigned int length)
 {
-    char command[length + 1];
-    for (uint32_t i = 0; i < length; i++)
-        command[i] = (char)payload[i];
+  char command[length + 1];
+  for (uint32_t i = 0; i < length; i++)
+    command[i] = (char)payload[i];
 
-    command[length] = '\0';
+  command[length] = '\0';
 
-    if (strcmp(command, "on") == 0)
-        toggleDeviceState(true);
-    else if (strcmp(command, "off") == 0)
-        toggleDeviceState(false);
-    else if (strstr(command, "temp ") != NULL) {
-        setSettingsTemperature(atof(&command[5]));
-    }
-    else if (strstr(command, "delta ") != NULL) {
-        setSettingsDelta(atof(&command[6]));
-    }
-    
-    mqttPrintf(LOG_TOPIC, "%s", command);
+  if (strcmp(command, "on") == 0)
+    toggleDeviceState(true);
+  else if (strcmp(command, "off") == 0)
+    toggleDeviceState(false);
+  else if (strstr(command, "temp ") != NULL) {
+    setSettingsTemperature(atof(&command[5]));
+  }
+  else if (strstr(command, "delta ") != NULL) {
+    setSettingsDelta(atof(&command[6]));
+  }
+  
+  mqttPrintf(LOG_TOPIC, "%s", command);
 }
