@@ -12,15 +12,20 @@ unsigned long wifiErrorPreviousMillis = 0;
 unsigned long sensorErrorPreviousMillis = 0;
 
 bool getHeaterState() {
-    return digitalRead(HEATER_PIN);
-}
-
-void toggleHeater() {
-    digitalWrite(HEATER_PIN, !getHeaterState());
+  return digitalRead(HEATER_PIN);
 }
 
 void toggleHeater(bool enable) {
+  if(enable != getHeaterState()) {
     digitalWrite(HEATER_PIN, enable);
+    mqttPrintf(MQTT_HEATER_STATE_TOPIC, "%d", getHeaterState());
+    mqttPrintf(MQTT_FLOOR_TEMPERATURE_TOPIC, "%.2f", getFloorTemperature());
+    mqttPrintf(MQTT_TRIAC_TEMPERATURE_TOPIC, "%.2f", getTriacTemperature());
+  }
+}
+
+void toggleHeater() {
+  toggleHeater(!getHeaterState());
 }
 
 static void heaterProcess() {
