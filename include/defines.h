@@ -1,20 +1,20 @@
 #pragma once
 
 //network
-#define WIFI_SSID               ""
-#define WIFI_PASS               ""
+#define WIFI_SSID               "SANDHOME"
+#define WIFI_PASS               "011235813"
 #define IP_ADDRESS_LAST_BYTE    1
-#define MDNS_NAME               ""
+#define MDNS_NAME               "bath"
 #define WIFI_CONNECT_TIMEOUT    10000
-#define UPDATE_USERNAME         ""
-#define UPDATE_PASS             ""
+#define UPDATE_USERNAME         "bath"
+#define UPDATE_PASS             "bath"
 
 //mqtt
-#define MQTT_SERVER                     "192.168.1.200"
-#define MQTT_PORT                       1884
+#define MQTT_SERVER                     "192.168.13.200"
+#define MQTT_PORT                       1883
 #define MQTT_ID                         "mqtt_bath"
-#define MQTT_USER                       ""
-#define MQTT_PASS                       ""
+#define MQTT_USER                       "bath"
+#define MQTT_PASS                       "0112358"
 #define MQTT_RECONNECT_TIMEOUT          10000
 #define MQTT_FLOOR_TEMPERATURE_TOPIC    "bath/floor_temp"
 #define MQTT_TRIAC_TEMPERATURE_TOPIC    "bath/triac_temp"
