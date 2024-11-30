@@ -19,8 +19,6 @@ void toggleHeater(bool enable) {
   if(enable != getHeaterState()) {
     digitalWrite(HEATER_PIN, enable);
     mqttPrintf(MQTT_HEATER_STATE_TOPIC, "%d", getHeaterState());
-    mqttPrintf(MQTT_FLOOR_TEMPERATURE_TOPIC, "%.2f", getFloorTemperature());
-    mqttPrintf(MQTT_TRIAC_TEMPERATURE_TOPIC, "%.2f", getTriacTemperature());
   }
 }
 
@@ -56,8 +54,11 @@ static void processLeds() {
   if(!isWifiConnected()) {
     blink(GREEN_LED_PIN, wifiErrorPreviousMillis, WIFI_ERROR_BLINK_INTERVAL);
   }
-  else {    
+  else if(getDeviceState()) {
     digitalWrite(GREEN_LED_PIN, HIGH);
+  }
+  else {
+    digitalWrite(GREEN_LED_PIN, LOW);
   }
 
   if(!getFloorSensorOk()) {
