@@ -8,15 +8,15 @@
 #include "http.h"
 #include "main_process.h"
 
-AutoOTA ota("1.0", "modemaizer/bath_floor/tree/master/project.json");
+AutoOTA ota("1.1", "modemaizer/bath_floor/tree/master/project.json");
 uint32_t otaPreviousMillis = 0;
 
 static void otaProcess() {
-  //Serial.println("otaProcess");
   uint32_t currentMillis = millis();
   if (currentMillis - otaPreviousMillis >= OTA_INTERVAL) {
     otaPreviousMillis = currentMillis;
     String ver, notes;
+    Serial.println("check updates");
     if (ota.checkUpdate(&ver, &notes)) {
         Serial.println(ver);
         Serial.println(notes);
@@ -37,6 +37,7 @@ static void networkInit() {
   //mdnsInit();
   httpInit();
   //mqttInit();
+  Serial.println(ota.version());
 }
 
 static void networkProcess() {
