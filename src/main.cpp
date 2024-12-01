@@ -9,6 +9,7 @@
 
 static void networkInit() {
   wifiInit();
+  mqttInit();
 }
 
 static void networkProcess() {

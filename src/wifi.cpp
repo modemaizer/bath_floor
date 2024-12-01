@@ -24,7 +24,6 @@ static void onWiFiConnect(const WiFiEventStationModeGotIP &event)
   Serial.println(WiFi.RSSI());
   mdnsInit();
   httpInit();
-  mqttInit();
 }
 
 static void onWiFiDisconnect(const WiFiEventStationModeDisconnected &event)

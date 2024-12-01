@@ -1,5 +1,14 @@
 #pragma once
 
+#include "defines/parameters.h"
+
+struct BathSettings {
+  float temperature = SETTINGS_TEMPERATURE_DEFAULT;
+  float delta = SETTINGS_DELTA_DEFAULT;
+  bool on = false;
+  uint32_t interval = SETTINGS_INTERVAL_DEFAULT;
+};
+
 void settingsInit();
 void settingsProcess();
 
