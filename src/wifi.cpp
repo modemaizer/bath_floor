@@ -1,6 +1,7 @@
 #include <ESP8266WiFi.h>
 
 #include "defines.h"
+#include "ota.h"
 
 static const char *ssid = WIFI_SSID;
 static const char *password = WIFI_PASS;
@@ -13,11 +14,12 @@ static bool f_first_connect = true;
 
 static void onWiFiConnect(const WiFiEventStationModeGotIP &event)
 {
-  // Serial.println("Wi-Fi соединение установлено.");
-  // Serial.print("IP адрес: ");
-  // Serial.println(WiFi.localIP());
-  // Serial.print("RSSI: ");
-  // Serial.println(WiFi.RSSI());
+  Serial.println("Wi-Fi соединение установлено.");
+  Serial.print("IP адрес: ");
+  Serial.println(WiFi.localIP());
+  Serial.print("RSSI: ");
+  Serial.println(WiFi.RSSI());
+  otaCheck();
 }
 
 static void onWiFiDisconnect(const WiFiEventStationModeDisconnected &event)
@@ -28,6 +30,7 @@ static void onWiFiDisconnect(const WiFiEventStationModeDisconnected &event)
 
 void wifiInit()
 {
+  Serial.println("wifiInit");
   if (WiFi.status() == WL_CONNECTED || millis() < next_connect_ms)
     return;
 
@@ -37,10 +40,9 @@ void wifiInit()
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   next_connect_ms = millis() + WIFI_CONNECT_TIMEOUT;
-  if (WiFi.status() == WL_CONNECTED)
+  if (WiFi.status() == WL_CONNECTED) {
     f_first_connect = false;
-  else
-  {
+  } else {
     next_connect_ms = millis() + WIFI_CONNECT_TIMEOUT;
   }
 }
