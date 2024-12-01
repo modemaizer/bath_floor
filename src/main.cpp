@@ -8,7 +8,7 @@
 #include "http.h"
 #include "main_process.h"
 
-AutoOTA ota("1.3", "modemaizer/bath_floor/master/project.json");
+AutoOTA ota("1.4", "modemaizer/bath_floor/master/project.json");
 uint32_t otaPreviousMillis = 0;
 
 static void otaProcess() {
@@ -38,7 +38,7 @@ static void networkInit() {
   wifiInit();
   //mdnsInit();
   httpInit();
-  //mqttInit();
+  mqttInit();
   Serial.println(ota.version());
 }
 
@@ -46,7 +46,7 @@ static void networkProcess() {
   wifiProcess();
   //MDNS.update();
   httpProcess();
-  //mqttProcess();
+  mqttProcess();
   otaProcess();
 }
 
