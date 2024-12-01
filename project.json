@@ -1,0 +1,17 @@
+{
+    "name": "Термостат тёплого пола",
+    "about": "Используется для контроля температуры пола в ванной",
+    "version": "1.0",
+    "notes": "",
+    "builds": [
+      {
+        "chipFamily": "ESP8266",
+        "parts": [
+          {
+            "path": "https://raw.githubusercontent.com/modemaizer/bath_floor/master/bin/firmware.bin",
+            "offset": 0
+          }
+        ]
+      }
+    ]
+  }
