@@ -4,7 +4,7 @@
 #include "defines/ota.h"
 
 AutoOTA otaGithub(CURRENT_VERSION, OTA_GITHUB_CONFIG_PATH);
-AutoOTA otaLocal(CURRENT_VERSION, OTA_LOCAL_CONFIG_PATH, OTA_LOCAL_SERVER_HOST, OTA_LOCAL_SERVER_PORT);
+AutoOTA otaLocal(CURRENT_VERSION, OTA_LOCAL_CONFIG_PATH);
 uint32_t otaPreviousMillis = 0;
 
 void otaCheck() {

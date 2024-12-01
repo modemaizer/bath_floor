@@ -5,6 +5,7 @@
 #include "mdns.h"
 #include "http.h"
 #include "mqtt.h"
+#include "ota.h"
 
 static const char *ssid = WIFI_SSID;
 static const char *password = WIFI_PASS;
@@ -24,6 +25,7 @@ static void onWiFiConnect(const WiFiEventStationModeGotIP &event)
   Serial.println(WiFi.RSSI());
   mdnsInit();
   httpInit();
+  otaCheck();
 }
 
 static void onWiFiDisconnect(const WiFiEventStationModeDisconnected &event)
