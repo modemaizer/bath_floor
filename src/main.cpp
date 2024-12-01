@@ -8,7 +8,7 @@
 #include "http.h"
 #include "main_process.h"
 
-AutoOTA ota("1.1", "modemaizer/bath_floor/tree/master/project.json");
+AutoOTA ota("1.1", "modemaizer/bath_floor/master/project.json");
 uint32_t otaPreviousMillis = 0;
 
 static void otaProcess() {
