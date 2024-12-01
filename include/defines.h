@@ -9,6 +9,12 @@
 #define UPDATE_USERNAME         "bath"
 #define UPDATE_PASS             "bath"
 
+//ota
+#define OTA_SERVER_HOST         "192.168.13.200"
+#define OTA_SERVER_PORT         443
+#define OTA_CONFIG_PATH         "firmwares/bath_floor/project.json"
+#define OTA_INTERVAL            5000
+
 //mqtt
 #define MQTT_SERVER                     "192.168.13.200"
 #define MQTT_PORT                       1883
