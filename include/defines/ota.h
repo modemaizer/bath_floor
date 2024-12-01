@@ -1,3 +1,5 @@
+#pragma once
+
 #define OTA_INTERVAL            5000
 
 #define CURRENT_VERSION         "1.0"

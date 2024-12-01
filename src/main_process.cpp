@@ -1,7 +1,9 @@
 #include <Arduino.h>
 
+#include "defines/parameters.h"
+#include "defines/pins.h"
+#include "defines/mqtt.h"
 #include "main_process.h"
-#include "defines.h"
 #include "sensors.h"
 #include "mqtt.h"
 #include "settings.h"
@@ -117,5 +119,5 @@ void parseIncomingCommand(char *topic, byte *payload, unsigned int length)
     setSettingsDelta(atof(&command[6]));
   }
   
-  mqttPrintf(LOG_TOPIC, "%s", command);
+  mqttPrintf(MQTT_LOG_TOPIC, "%s", command);
 }

@@ -1,14 +1,9 @@
 #include <FileData.h>
 #include <LittleFS.h>
 
-#include "defines.h"
+#include "defines/parameters.h"
+#include "settings.h"
 
-struct BathSettings {
-  float temperature = SETTINGS_TEMPERATURE_DEFAULT;
-  float delta = SETTINGS_DELTA_DEFAULT;
-  bool on = false;
-  uint32_t interval = SETTINGS_INTERVAL_DEFAULT;
-};
 static BathSettings settings;
 
 FileData data(&LittleFS, "/settings.dat", 'B', &settings, sizeof(settings));

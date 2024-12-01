@@ -1,7 +1,10 @@
 #include <ESP8266WiFi.h>
 
-#include "defines.h"
-#include "ota.h"
+#include "defines/network.h"
+#include "wifi.h"
+#include "mdns.h"
+#include "http.h"
+#include "mqtt.h"
 
 static const char *ssid = WIFI_SSID;
 static const char *password = WIFI_PASS;
@@ -19,7 +22,8 @@ static void onWiFiConnect(const WiFiEventStationModeGotIP &event)
   Serial.println(WiFi.localIP());
   Serial.print("RSSI: ");
   Serial.println(WiFi.RSSI());
-  otaCheck();
+  mdnsInit();
+  httpInit();
 }
 
 static void onWiFiDisconnect(const WiFiEventStationModeDisconnected &event)
@@ -30,7 +34,6 @@ static void onWiFiDisconnect(const WiFiEventStationModeDisconnected &event)
 
 void wifiInit()
 {
-  Serial.println("wifiInit");
   if (WiFi.status() == WL_CONNECTED || millis() < next_connect_ms)
     return;
 

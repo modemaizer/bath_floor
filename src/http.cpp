@@ -4,7 +4,7 @@
 #include <ArduinoJson.h>
 #include <LittleFS.h>
 
-#include "defines.h"
+#include "defines/network.h"
 #include "wifi.h"
 #include "main_process.h"
 #include "sensors.h"

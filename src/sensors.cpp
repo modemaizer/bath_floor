@@ -1,6 +1,7 @@
 #include <microDS18B20.h>
 
-#include "defines.h"
+#include "defines/pins.h"
+#include "defines/mqtt.h"
 #include "mqtt.h"
 
 static float floorTemp = 0;
@@ -60,16 +61,3 @@ void sensorsProcess() {
     readFloor();
     readTriac();
 }
-
-// void readSensor(MicroDS18B20 &sensor, float &temperature, bool &sensorOk) {
-//   if (sensor.readTemp()) {
-//     temperature = sensor.getTemp();
-//     sensorOk = true;
-//   } 
-//   else {
-//     temperature = 0;
-//     sensorOk = false;
-//   }
-//   sensor.setResolution(10);
-//   sensor.requestTemp();
-// }

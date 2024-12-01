@@ -1,0 +1,10 @@
+#pragma once
+
+#define SERIAL_BAUDRATE                     115200
+#define TRIAC_MAX_TEMPERATURE               60
+#define WIFI_ERROR_BLINK_INTERVAL           500
+#define FLOOR_SENSOR_ERROR_BLINK_INTERVAL   100
+#define TRIAC_SENSOR_ERROR_BLINK_INTERVAL   500
+#define SETTINGS_TEMPERATURE_DEFAULT        25
+#define SETTINGS_DELTA_DEFAULT              0.5
+#define SETTINGS_INTERVAL_DEFAULT           1000
