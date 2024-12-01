@@ -8,7 +8,7 @@
 #include "http.h"
 #include "main_process.h"
 
-AutoOTA ota("1.1", "modemaizer/bath_floor/master/project.json");
+AutoOTA ota("1.2", "modemaizer/bath_floor/master/project.json");
 uint32_t otaPreviousMillis = 0;
 
 static void otaProcess() {
@@ -16,7 +16,8 @@ static void otaProcess() {
   if (currentMillis - otaPreviousMillis >= OTA_INTERVAL) {
     otaPreviousMillis = currentMillis;
     String ver, notes;
-    Serial.println("check updates");
+    Serial.print("check updates, current version: ");
+    Serial.println(ota.version());
     if (ota.checkUpdate(&ver, &notes)) {
         Serial.println(ver);
         Serial.println(notes);
