@@ -8,7 +8,7 @@
 #include "http.h"
 #include "main_process.h"
 
-AutoOTA ota("1.0", OTA_CONFIG_PATH, OTA_SERVER_HOST, OTA_SERVER_PORT);
+AutoOTA ota("1.0", "modemaizer/bath_floor/tree/master/project.json");
 uint32_t otaPreviousMillis = 0;
 
 static void otaProcess() {
@@ -34,16 +34,16 @@ static void mdnsInit() {
 
 static void networkInit() {
   wifiInit();
-  mdnsInit();
+  //mdnsInit();
   httpInit();
-  mqttInit();
+  //mqttInit();
 }
 
 static void networkProcess() {
   wifiProcess();
-  MDNS.update();
+  //MDNS.update();
   httpProcess();
-  mqttProcess();
+  //mqttProcess();
   otaProcess();
 }
 
