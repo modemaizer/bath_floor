@@ -6,6 +6,7 @@
 #include "http.h"
 #include "mdns.h"
 #include "main_process.h"
+#include "ota.h"
 
 static void networkInit() {
   wifiInit();
@@ -16,6 +17,7 @@ static void networkProcess() {
   mdnsProcess();
   httpProcess();
   mqttProcess();
+  otaProcess();
 }
 
 void setup() {
