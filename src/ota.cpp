@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <AutoOTA.h>
 
-#include "defines_ota.h"
+#include "defines/ota.h"
 
 AutoOTA otaGithub(CURRENT_VERSION, OTA_GITHUB_CONFIG_PATH);
 AutoOTA otaLocal(CURRENT_VERSION, OTA_LOCAL_CONFIG_PATH, OTA_LOCAL_SERVER_HOST, OTA_LOCAL_SERVER_PORT);

@@ -1,6 +1,7 @@
 #include <microDS18B20.h>
 
-#include "defines.h"
+#include "defines/pins.h"
+#include "defines/mqtt.h"
 #include "mqtt.h"
 
 static float floorTemp = 0;

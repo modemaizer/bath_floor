@@ -1,7 +1,7 @@
 #include <FileData.h>
 #include <LittleFS.h>
 
-#include "defines.h"
+#include "defines/parameters.h"
 
 struct BathSettings {
   float temperature = SETTINGS_TEMPERATURE_DEFAULT;

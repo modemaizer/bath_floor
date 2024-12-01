@@ -2,7 +2,7 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
-#include "defines.h"
+#include "defines/mqtt.h"
 #include "wifi.h"
 #include "main_process.h"
 
@@ -10,27 +10,20 @@ static WiFiClient wifiClient;
 static PubSubClient mqttClient(wifiClient);
 static const char *mqttServer = MQTT_SERVER;
 static const int mqttPort = MQTT_PORT;
-//static uint32_t mqttNextConnectMs = 0;
-//static bool needReconnect = true;
-
-//static void checkReconnectTimeout();
 
 static void mqttConnect()
 {
   if (!isWifiConnected())
     return;
 
-  mqttClient.setServer(mqttServer, mqttPort);
-  Serial.println("Подключаюсь к MQTT...");
   if (!mqttClient.connected())
   {
+    mqttClient.setServer(mqttServer, mqttPort);
     if (mqttClient.connect(MQTT_ID, MQTT_USER, MQTT_PASS))
     {
-      Serial.println("Подключение успешно");
-
       mqttClient.setCallback([](char *topic, byte *payload, unsigned int length)
                          { parseIncomingCommand(topic, payload, length); });
-      mqttClient.subscribe(TOPIC_COMMAND);
+      mqttClient.subscribe(MQTT_COMMAND_TOPIC);
     }
     else
     {
@@ -38,16 +31,10 @@ static void mqttConnect()
       Serial.println(mqttClient.state());
     }
   }
-  //needReconnect = true;
 }
 
 void mqttProcess()
 {
-  //checkReconnectTimeout();
-  if (!mqttClient.connected())
-  {
-    mqttConnect();
-  }
   mqttClient.loop();
 }
 
