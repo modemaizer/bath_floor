@@ -13,30 +13,32 @@ AutoOTA otaGithub(CURRENT_VERSION, OTA_GITHUB_CONFIG_PATH);
 AutoOTA otaLocal(CURRENT_VERSION, OTA_LOCAL_CONFIG_PATH, OTA_LOCAL_SERVER_HOST, OTA_LOCAL_SERVER_PORT);
 uint32_t otaPreviousMillis = 0;
 
-static void otaProcess() {
-  uint32_t currentMillis = millis();
-  if (currentMillis - otaPreviousMillis >= OTA_INTERVAL) {
-    otaPreviousMillis = currentMillis;
-    String ver, notes;
-    Serial.print("current version (local OTA): ");
-    Serial.println(otaLocal.version());
-    Serial.print("current version (Github OTA): ");
-    Serial.println(otaGithub.version());
-    Serial.println("check updates local");
-    if (otaLocal.checkUpdate(&ver, &notes)) {
+static void otaCheck() {
+  Serial.print("current version (local OTA): ");
+  Serial.println(otaLocal.version());
+  Serial.print("current version (Github OTA): ");
+  Serial.println(otaGithub.version());
+  Serial.println("checking updates");
+  String ver, notes;
+  if (otaLocal.checkUpdate(&ver, &notes)) {
+      Serial.print("found local: ");
+      Serial.println(ver);
+      Serial.println(notes);
+      otaLocal.update();
+  } else if (otaGithub.checkUpdate(&ver, &notes)) {
+        Serial.print("found on Github: ");
         Serial.println(ver);
         Serial.println(notes);
-        otaGithub.updateNow();
-    }
-    Serial.println("check updates on Github");
-    if (otaGithub.checkUpdate(&ver, &notes)) {
-        Serial.println(ver);
-        Serial.println(notes);
-        otaGithub.updateNow();
-    }
+        otaGithub.update();
+  } else {
     Serial.println("no any updates");
   }
-  
+}
+
+static void otaProcess() {
+  if (!otaLocal.tick()) {
+    otaGithub.tick();
+  }
 }
 
 static void mdnsInit() {
@@ -50,7 +52,7 @@ static void networkInit() {
   //mdnsInit();
   httpInit();
   //mqttInit();
-  Serial.println(otaGithub.version());
+  otaCheck();
 }
 
 static void networkProcess() {
