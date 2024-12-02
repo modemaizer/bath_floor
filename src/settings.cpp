@@ -33,7 +33,10 @@ bool getDeviceState() {
     return settings.on;
 }
 uint32_t getSensorsCheckInterval() {
-    return settings.interval;
+    return settings.sensorsInterval;
+}
+uint32_t getMqttInterval() {
+    return settings.mqttInterval;
 }
 float getTemperatureLowBound() {
     return settings.temperature - settings.delta;
@@ -52,7 +55,11 @@ void setSettingsDelta(float value) {
     data.update();
 }
 void setSensorsCheckInterval(uint32_t value) {
-    settings.interval = value;
+    settings.sensorsInterval = value;
+    data.update();
+}
+void setMqttInterval(uint32_t value) {
+    settings.mqttInterval = value;
     data.update();
 }
 

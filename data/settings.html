@@ -10,6 +10,7 @@
   <body>
     <br>
     <div style="text-align: left;"><a href="/"><i class="fas fa-thermometer-quarter fa-3x" aria-hidden="true"></i></a></div>
+    <div style="text-align: left;"><label id="version"></div>
     <div style="text-align: center;"><label id="message" class="fas fa-2xl">Settings updated</label></div>
     <form method="post" id="myform" enctype="application/x-www-form-urlencoded" onsubmit="return handleSubmit">
       
@@ -30,7 +31,11 @@
           </tr>
           <tr>
             <td><label for="i" id="label" class="fas fa-2xl">Interval: </label></td>
-            <td><input type="number" name="i" step="100" min="100" max="60000" id="interval" pattern="\d" class="fas fa-2xl"></td>
+            <td><input type="number" name="i" step="100" min="100" max="60000" id="sensors_interval" pattern="\d" class="fas fa-2xl"></td>
+          </tr>
+          <tr>
+            <td><label for="m" id="label" class="fas fa-2xl">MQTT interval: </label></td>
+            <td><input type="number" name="m" step="100" min="100" max="86400000" id="mqtt_interval" pattern="\d" class="fas fa-2xl"></td>
           </tr>
         </table>
       </div>

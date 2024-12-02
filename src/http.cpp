@@ -5,6 +5,7 @@
 #include <LittleFS.h>
 
 #include "defines/network.h"
+#include "defines/ota.h"
 #include "wifi.h"
 #include "main_process.h"
 #include "sensors.h"
@@ -19,7 +20,9 @@ static void getSettingsEndpoint() {
   doc["temperature"] = getSettingsTemperature();
   doc["delta"] = getSettingsDelta();
   doc["state"] = getDeviceState();
-  doc["interval"] = getSensorsCheckInterval();
+  doc["sensors_interval"] = getSensorsCheckInterval();
+  doc["mqtt_interval"] = getMqttInterval();
+  doc["version"] = CURRENT_VERSION;
   String buf;
   serializeJson(doc, buf);
   httpServer.send(200, "application/json", buf);
@@ -51,6 +54,9 @@ static void updateSettingsEndpoint() {
     }
     if(httpServer.hasArg("i")) {
       setSensorsCheckInterval(httpServer.arg("i").toInt());
+    }
+    if(httpServer.hasArg("m")) {
+      setMqttInterval(httpServer.arg("m").toInt());
     }
 
     getSettingsEndpoint();
