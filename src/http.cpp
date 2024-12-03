@@ -1,4 +1,3 @@
-#include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266HTTPUpdateServer.h>
 #include <ArduinoJson.h>
@@ -6,7 +5,7 @@
 
 #include "defines/network.h"
 #include "defines/ota.h"
-#include "wifi.h"
+#include "wifi_connector.h"
 #include "main_process.h"
 #include "sensors.h"
 #include "settings.h"

@@ -1,12 +1,17 @@
 #include <Arduino.h>
 #include <ESP8266mDNS.h>
 
-#include "wifi.h"
+#include "wifi_connector.h"
 #include "mqtt.h"
 #include "http.h"
 #include "mdns.h"
 #include "main_process.h"
 #include "ota.h"
+
+void onConnected() {
+  mdnsInit();
+  httpInit();
+}
 
 static void networkInit() {
   wifiInit();

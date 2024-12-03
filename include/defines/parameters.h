@@ -1,6 +1,5 @@
 #pragma once
 
-#define SERIAL_BAUDRATE                     115200
 #define TRIAC_MAX_TEMPERATURE               60
 #define WIFI_ERROR_BLINK_INTERVAL           500
 #define FLOOR_SENSOR_ERROR_BLINK_INTERVAL   100

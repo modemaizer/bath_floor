@@ -2,7 +2,9 @@
 #include <LittleFS.h>
 
 #include "defines/parameters.h"
+#include "defines/mqtt.h"
 #include "settings.h"
+#include "mqtt.h"
 
 static BathSettings settings;
 
@@ -66,6 +68,7 @@ void setMqttInterval(uint32_t value) {
 void toggleDeviceState() {
     settings.on = !settings.on;
     data.update();
+    mqttSendDeviceState();
 }
 
 void toggleDeviceState(bool state) {

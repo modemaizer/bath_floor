@@ -7,7 +7,7 @@
 #include "sensors.h"
 #include "mqtt.h"
 #include "settings.h"
-#include "wifi.h"
+#include "wifi_connector.h"
 
 uint32_t sensorPreviousMillis = 0;
 uint32_t wifiErrorPreviousMillis = 0;
@@ -20,7 +20,7 @@ bool getHeaterState() {
 void toggleHeater(bool enable) {
   if(enable != getHeaterState()) {
     digitalWrite(HEATER_PIN, enable);
-    mqttPrintf(MQTT_HEATER_STATE_TOPIC, "%d", getHeaterState());
+    mqttSendDeviceState();
   }
 }
 

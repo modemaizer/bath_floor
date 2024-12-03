@@ -40,7 +40,6 @@ void readFloor() {
   }
   floorSensor.setResolution(10);
   floorSensor.requestTemp();
-  mqttPrintf(MQTT_FLOOR_TEMPERATURE_TOPIC, "%.2f", floorTemp);
 }
 
 void readTriac() {
@@ -54,10 +53,10 @@ void readTriac() {
   }
   triacSensor.setResolution(10);
   triacSensor.requestTemp();
-  mqttPrintf(MQTT_TRIAC_TEMPERATURE_TOPIC, "%.2f", triacTemp);
 }
 
 void sensorsProcess() {
     readFloor();
     readTriac();
+    mqttSendDeviceState();
 }
